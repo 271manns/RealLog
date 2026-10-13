@@ -73,7 +73,7 @@ public class ArrayLog<T> implements EnhancedLogInterface<T>
     // Returns the element at the specified position in this list.
     public T get(int index)
     {   
-        if(index < 0 || index >= size)
+        if(index < 0 || index >= log.length)
         {
             throw new IndexOutOfBoundsException();
         }
@@ -115,7 +115,7 @@ public class ArrayLog<T> implements EnhancedLogInterface<T>
     // with the specified element.  Returns what was at that location
     public T set(int index, T element)
     {
-        if(index < 0 || index >= size)
+        if(index < 0 || index >= log.length)
         {
             throw new IndexOutOfBoundsException();
         }
@@ -127,7 +127,7 @@ public class ArrayLog<T> implements EnhancedLogInterface<T>
     // Inserts the specified element at the specified position in this list.
     public void add(int index, T element)
     {
-        if(index < 0 || index > size)
+        if(index < 0 || index > log.length)
         {
             throw new IndexOutOfBoundsException();
         }
@@ -148,15 +148,11 @@ public class ArrayLog<T> implements EnhancedLogInterface<T>
         }
         else
         {
-            for(int i = 0; i< index; i++)
+            for(int i = size; i > index; i--)
             {
-                log[i] = log[i];
+                log[i] = log[i - 1];
             }
             log[index] = element;
-            for(int i = index; i < size; i++)
-            {
-                log[i + 1] = log[i];
-            }
 
             size++;
         }
@@ -169,36 +165,26 @@ public class ArrayLog<T> implements EnhancedLogInterface<T>
     // are set to null.
     public T remove(int index)
     {
-        if(index < 0 || index >= size)
+        if(index < 0 || index >= log.length)
         {
             throw new IndexOutOfBoundsException();
         }
-        if(size == log.length /4)
+        T removedElement = log[index];
+        for(int i = index; i < size; i++)
+        {
+            log[i] = log[i + 1];
+        }
+        size--;
+        if(size == log.length / 4)
         {
             T[] newLog = (T[])new Object[log.length / 2];
-            for(int i = 0; i < index; i++)
+            for(int i = 0; i < size; i++)
             {
                 newLog[i] = log[i];
             }
-            T removedElement = log[index];
-            for(int i = index; i < size - 1; i++)
-            {
-                newLog[i] = log[i + 1];
-            }
             log = newLog;
-            size--;
-            return removedElement;
         }
-        else
-        {
-            T removedElement = log[index];
-            for(int i = index; i < size - 1; i++)
-            {
-                log[i] = log[i + 1];
-            }
-            size--;
-            return removedElement;
-        }
+        return removedElement;
     }
     
     // Removes the first occurance of the specified element from this
@@ -225,5 +211,6 @@ public class ArrayLog<T> implements EnhancedLogInterface<T>
             log[i] = null;
         }
         size = 0;
+        log = (T[])new Object[4];
     }
 }
