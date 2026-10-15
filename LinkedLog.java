@@ -14,40 +14,72 @@ public class LinkedLog<T> implements EnhancedLogInterface<T>
 
     public LinkedLog(String name)
     {
+        this.name = name;
     }
     
     // returns the name of this StringLog
     public String getName()
     {
-        return "";
+        return name;
     }
 
     // returns the logical size of this StringLog
     public int size()
     {
-        return -1;
+        return size;
     }
     
     // returns true if this list contains no elements
     public boolean isEmpty()
     {
-        return false;
+        return size == 0;
     }
     
     // returns true if this list is completely full
     public boolean isFull()
     {
-        return true;
+        return false;
     }
 
     // appends the specified element to the end of this list
     public void add(T element)
     {
+        if(log == null)
+        {
+            log = new LLNode<T>(element);
+            size++;
+        }
+        else
+        {
+            LLNode<T> temp = log;
+            while(temp.getLink() != null)
+            {
+                temp= temp.getLink();
+            }
+            temp.setLink(new LLNode<T>(element));
+            size++;
+        }
+
     }
   
     // returns the element at the specified position in this list
     public T get(int index)
     {
+        if(index< 0 || index >= size)
+        {
+            throw new IndexOutOfBoundsException("Index is Out of Bounds");
+        }
+        LLNode<T> temp = log;
+        int count = 0;
+        while(temp.getInfo() != null){
+            if(count != index){
+                temp = temp.getLink();
+                count++;
+            }
+            else{
+                return temp.getInfo();
+            }
+        }
         return null;
     }
     
@@ -55,12 +87,40 @@ public class LinkedLog<T> implements EnhancedLogInterface<T>
     // in this list, or -1 if this list does not contain the element
     public int indexOf(T element)
     {
+        LLNode<T> temp = log;
+        int count = 0;
+
+        while(temp!= null)
+        {
+            if(temp.getInfo() == element)
+            {
+                return count;
+            }
+            else
+            {
+                temp = temp.getLink();
+                count++;
+            }
+        }
         return -1;
     }
     
     // returns true if this list contains the specified element
     public boolean contains(T element)
     {
+        LLNode<T> temp = log;
+        while(temp != null)
+        {
+            if(temp.getInfo() == element)
+            {
+                return true;
+            }
+            else
+            {
+                temp = temp.getLink();
+            }
+            
+        }
         return false;
     }
     
