@@ -144,18 +144,98 @@ public class LinkedLog<T> implements EnhancedLogInterface<T>
     // with the specified element
     public T set(int index, T element)
     {
-        return null;
+        if(index< 0 || index>=size)
+        {
+            throw new IndexOutOfBoundsException("Index Out of Bounds");
+        }
+        int count = 0;
+        T oldValue = null;
+        LLNode<T> temp = log; 
+        while(temp != null)
+        {
+            if(count == index)
+            {
+                oldValue = temp.getInfo();
+                temp.setInfo(element);
+                temp = temp.getLink();
+                count++;
+            }
+            else
+            {
+                temp = temp.getLink();
+                count++;
+            }
+        }
+        return oldValue;
     }
     
     // inserts the specified element at the specified position in this list
     public void add(int index, T element)
     {
+         if(index< 0 || index>=size)
+        {
+            throw new IndexOutOfBoundsException("Index Out of Bounds");
+        }
+        int count = 0; 
+        LLNode<T> temp = log;
+        LLNode<T> newNode = new LLNode<T>(element);
+        while(temp != null)
+        {
+            if(index == 0)
+            {
+                newNode.setLink(log);
+                count++;
+                size++;
+            }
+            else if((count+1) == index)
+            {
+                LLNode<T> tempNode = temp.getLink();
+                temp.setLink(newNode);
+                newNode.setLink(tempNode);
+                temp = temp.getLink();
+                count++;
+                size++;
+            }
+            else
+            {
+                count++;
+                temp= temp.getLink();
+            }
+        }
     }
     
     // removes the element at the specified position in this list
     public T remove(int index)
     {
-        return null;
+       if(index< 0 || index>=size)
+        {
+            throw new IndexOutOfBoundsException("Index Out of Bounds");
+        }
+        int count = 0; 
+        LLNode<T> tempNode = new LLNode<T>(null);
+        LLNode<T> temp = log;
+        while(temp != null)
+        { 
+            if(index == 0)
+            {
+                T removed = log.getInfo();
+                log = log.getLink();
+                size--;
+                return removed;
+            }
+            else if(count+1 == index)
+            {
+                T removed = temp.getLink().getInfo();
+                log.setLink(log.getLink());
+                size--;
+                return removed;
+            }
+            else
+            {
+                count++;
+            }
+            return (T)tempNode;
+        }
     }
     
     // removes the first occurance of the specified element from this
